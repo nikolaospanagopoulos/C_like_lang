@@ -1,4 +1,5 @@
 #include "Tokenizer.h"
+#include <stdexcept>
 
 std::vector<Token> Tokenizer::parse(const std::string &inProgram) {
 
@@ -8,6 +9,26 @@ std::vector<Token> Tokenizer::parse(const std::string &inProgram) {
   currentToken.lineNumber = 1;
   for (char currentChar : inProgram) {
 
+    if (currentToken.tType == STRING_ESCAPE_SEQUENCE) {
+      switch (currentChar) {
+      case 'n':
+        currentToken.tokenText.append(1, currentChar);
+        break;
+      case 'r':
+        currentToken.tokenText.append(1, currentChar);
+        break;
+      case 't':
+        currentToken.tokenText.append(1, currentChar);
+        break;
+      case '\\':
+        currentToken.tokenText.append(1, currentChar);
+        break;
+      default:
+        throw std::runtime_error("unknown escape sequence: \\" +
+                                 std::string(1, currentChar) + " on line " +
+                                 std::to_string(currentToken.lineNumber));
+      }
+    }
     switch (currentChar) {
 
     case '0':
@@ -52,6 +73,7 @@ std::vector<Token> Tokenizer::parse(const std::string &inProgram) {
       break;
     case '\r':
     case '\n':
+      endToken(currentToken, tokens);
       ++currentToken.lineNumber;
       break;
     case '"':
@@ -65,8 +87,7 @@ std::vector<Token> Tokenizer::parse(const std::string &inProgram) {
       break;
     case '\\':
       if (currentToken.tType == STRING_LITERAL) {
-        currentToken.tType = STRING_LITERAL;
-        currentToken.tokenText.append(1, currentChar);
+        currentToken.tType = STRING_ESCAPE_SEQUENCE;
       } else {
         endToken(currentToken, tokens);
         currentToken.tType = OPERATOR;
