@@ -1,3 +1,4 @@
+#include "Parser.h"
 #include "Tokenizer.h"
 #include <fstream>
 #include <iostream>
@@ -35,6 +36,14 @@ int main() {
   }
 
   std::cout << "END TOKEN INFO" << std::endl;
+
+  std::cout << '\n';
+  std::cout << '\n';
+  std::cout << '\n';
+  std::cout << "---------PARSE----------" << std::endl;
+
+  Parser parser;
+  parser.parse(tokens);
 
   return 0;
 }
