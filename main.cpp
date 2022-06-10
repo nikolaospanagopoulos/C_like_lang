@@ -1,7 +1,9 @@
+#include "Tokenizer.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <vector>
 
 int main() {
 
@@ -22,5 +24,17 @@ int main() {
   }
   std::cout << "file contents end " << std::endl;
   std::cout << "------------------------------" << std::endl;
+
+  Tokenizer tokenizer;
+  std::vector<Token> tokens = tokenizer.parse(sstr.str());
+
+  std::cout << "TOKEN INFO" << std::endl;
+  std::cout << '\n' << std::endl;
+  for (auto token : tokens) {
+    token.debugPrintTokens();
+  }
+
+  std::cout << "END TOKEN INFO" << std::endl;
+
   return 0;
 }
