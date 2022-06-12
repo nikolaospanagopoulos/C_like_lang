@@ -1,3 +1,4 @@
+#include "ExceptionError.h"
 #include "Parser.h"
 #include "Tokenizer.h"
 #include <fstream>
@@ -20,30 +21,39 @@ int main() {
     return 1;
   }
 
-  while (in_file >> sstr.rdbuf()) {
-    std::cout << sstr.str();
+  try {
+
+    while (in_file >> sstr.rdbuf()) {
+      std::cout << sstr.str();
+    }
+    std::cout << "file contents end " << std::endl;
+    std::cout << "------------------------------" << std::endl;
+
+    Tokenizer tokenizer;
+    std::vector<Token> tokens = tokenizer.parse(sstr.str());
+
+    std::cout << "TOKEN INFO" << std::endl;
+    std::cout << '\n' << std::endl;
+    for (auto token : tokens) {
+      token.debugPrintTokens();
+    }
+
+    std::cout << "END TOKEN INFO" << std::endl;
+
+    std::cout << '\n';
+    std::cout << '\n';
+    std::cout << '\n';
+    std::cout << "---------PARSE----------" << std::endl;
+
+    Parser parser;
+    parser.parse(tokens);
+
+    parser.debugPrint();
+    return 0;
+
+  } catch (Exception &e) {
+
+    e.outputMesage();
+    return 1;
   }
-  std::cout << "file contents end " << std::endl;
-  std::cout << "------------------------------" << std::endl;
-
-  Tokenizer tokenizer;
-  std::vector<Token> tokens = tokenizer.parse(sstr.str());
-
-  std::cout << "TOKEN INFO" << std::endl;
-  std::cout << '\n' << std::endl;
-  for (auto token : tokens) {
-    token.debugPrintTokens();
-  }
-
-  std::cout << "END TOKEN INFO" << std::endl;
-
-  std::cout << '\n';
-  std::cout << '\n';
-  std::cout << '\n';
-  std::cout << "---------PARSE----------" << std::endl;
-
-  Parser parser;
-  parser.parse(tokens);
-
-  return 0;
 }
