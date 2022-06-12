@@ -1,5 +1,6 @@
 #pragma once
 #include "FunctionDefinition.h"
+#include "Statement.h"
 #include "Tokenizer.h"
 #include "Type.h"
 #include <map>
@@ -20,7 +21,7 @@ private:
   std::optional<Token> expectIdentifier(const std::string &name = "");
   std::optional<Token> expectOperator(const std::string &name = "");
 
-  void parseOneStatement();
+  std::optional<Statement> parseOneStatement();
   bool parseFunctionBody();
   std::vector<Token>::iterator currentToken;
   std::vector<Token>::iterator endToken;

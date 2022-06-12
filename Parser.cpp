@@ -147,13 +147,24 @@ void Parser::debugPrint() const {
   }
 }
 
-void Parser::parseOneStatement() {
+std::optional<Statement> Parser::parseOneStatement() {
   std::vector<Token>::iterator startToken = currentToken;
   std::optional<Type> possibleType = expectType();
   if (!possibleType.has_value()) {
     currentToken = startToken;
-    return;
+    return std::nullopt;
   }
 
   std::optional<Token> possibleVariableName = expectIdentifier();
+  if (!possibleVariableName.has_value()) {
+    currentToken = startToken;
+    return std::nullopt;
+  }
+  Statement statement;
+
+  statement.statementKind = StatementKind::VARIABLE_DECLERATION;
+  statement.name = possibleVariableName->tokenText;
+  statement.type = *possibleType;
+
+  return statement;
 }
